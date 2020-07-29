@@ -7,13 +7,14 @@ var isAuthenticated = require("../config/middleware/isAuthenticated");
 module.exports = function(app) {
 
   app.get("/", function(req, res) {
-    // If the user already has an account send them to the members page
+    // On the base page, if there is a user logged in, then send them to the members page, and if not then send them to the sign up page
     if (req.user) {
       res.redirect("/members");
     }
     res.sendFile(path.join(__dirname, "../public/signup.html"));
   });
 
+  //At the login page, if there is a person logged in then send them to the members page, and if not send them to the login page
   app.get("/login", function(req, res) {
     // If the user already has an account send them to the members page
     if (req.user) {
@@ -22,8 +23,8 @@ module.exports = function(app) {
     res.sendFile(path.join(__dirname, "../public/login.html"));
   });
 
-  // Here we've add our isAuthenticated middleware to this route.
-  // If a user who is not logged in tries to access this route they will be redirected to the signup page
+//Using the isAuthenticated middleware we check if there is a user for the members page, and if not they will be redirected according to the middleware
+
   app.get("/members", isAuthenticated, function(req, res) {
     res.sendFile(path.join(__dirname, "../public/members.html"));
   });
